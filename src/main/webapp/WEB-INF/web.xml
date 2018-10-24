@@ -1,0 +1,91 @@
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+  <display-name>Archetype Created Web Application</display-name>
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>WEB-INF/security.xml</param-value>
+  </context-param>
+
+
+  <!--<listener>-->
+    <!--<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>-->
+  <!--</listener>-->
+  <!--<listener>-->
+    <!--<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>-->
+  <!--</listener>-->
+
+
+
+  <!--<filter>-->
+    <!--<filter-name>encodingFilter</filter-name>-->
+    <!--<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>-->
+    <!--<init-param>-->
+      <!--<param-name>encoding</param-name>-->
+      <!--<param-value>UTF-8</param-value>-->
+    <!--</init-param>-->
+    <!--<init-param>-->
+      <!--<param-name>forceEncoding</param-name>-->
+      <!--<param-value>true</param-value>-->
+    <!--</init-param>-->
+  <!--</filter>-->
+
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>com.pushgroup.core.service.CharacterSetFilter</filter-class>
+    <init-param>
+      <param-name>requestEncoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+
+  <!--Spring security-->
+  <!-- Need to enable xml config Spring Security -->
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>main</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>main</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+
+  <!--<welcome-file-list>-->
+    <!--<welcome-file>classpath:index.html</welcome-file>-->
+  <!--</welcome-file-list>-->
+  <!--<error-page>-->
+    <!--<error-code>404</error-code>-->
+    <!--<location>/WEB-INF/view/error/errorstatus.jsp</location>-->
+  <!--</error-page>-->
+
+    <session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
+
+</web-app>

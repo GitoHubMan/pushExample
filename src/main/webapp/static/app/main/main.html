@@ -1,0 +1,110 @@
+<div style="padding-left: 20px;">
+    <h3 style="margin: auto; text-align: center; padding-top: 10px;">{{headingTitle}}</h3>
+
+
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; max-width: 80%; margin: auto">
+
+        <div ng-repeat="condition in filters" style="padding-left: 50px; padding-top: 50px;">
+
+            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start;">
+
+                <div ng-show="compareStr(condition.viewElementName, 'INPUT')">
+                    <md-input-container>
+                        <label>{{condition.displayName}}</label>
+                        <input ng-change="addSelectedValueToArray(condition)" ng-model="condition.selectedValue">
+                    </md-input-container>
+                </div>
+
+                <div ng-show="compareStr(condition.viewElementName, 'SELECT')">
+                    <md-input-container>
+                        <label>{{condition.displayName}}</label>
+                        <md-select ng-model="condition.selectedValues" multiple>
+                            <md-optgroup label="{{condition.displayName}}">
+                                <md-option ng-value="allowedValue" ng-repeat="allowedValue in condition.allowedValues">{{allowedValue}}</md-option>
+                            </md-optgroup>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+                <div ng-repeat="childCondition in condition.relatedChildrenCondition" style="padding-left: 50px;"
+                     ng-show="condition.selectedValues.length > 0 && condition.selectedValues.indexOf(childCondition.relatedParentValue) !== -1">
+
+                    <md-input-container>
+                        <label>{{childCondition.displayName}}</label>
+                        <md-select ng-model="childCondition.selectedValues" multiple>
+                            <md-optgroup label="{{childCondition.displayName}}">
+                                <md-option ng-value="childAv" ng-repeat="childAv in childCondition.allowedValues">{{childAv}}</md-option>
+                            </md-optgroup>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div style="margin: auto; text-align: center; padding-top: 50px;">
+        <button type="button" class="btn btn-success" ng-click="getSubscriptions()">Search</button>
+    </div>
+
+
+    <div style="max-width: 70%; margin: auto; margin-top: 50px;">Total count: {{subscriptionRes.total}}</div>
+
+    <div style="display: flex; flex-direction: column; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; max-width: 90%; margin: auto; margin-top: 20px;">
+        <table class="table table-striped table-condensed table-hover" style="border: 1px solid black; margin-bottom: 50px; order: 1">
+            <tr style="border: 2px solid black">
+                <th>id</th>
+                <th>country name</th>
+                <th>city name</th>
+                <th>os name</th>
+                <th>os version</th>
+                <th>browser name</th>
+                <th>browser version</th>
+                <th>browser lang</th>
+                <th>created</th>
+            </tr>
+            <tr ng-repeat="sp in subscriptionRes.subscriptions | limitTo:10" style="max-height: 50px;">
+                <td>{{sp.id}}</td>
+                <td>{{sp.geoInfo.countryName}}</td>
+                <td>{{sp.geoInfo.cityName}}</td>
+                <td>{{sp.osInfo.name}}</td>
+                <td>{{sp.osInfo.version}}</td>
+                <td>{{sp.browserInfo.browserName}}</td>
+                <td>{{sp.browserInfo.majorVersion}}</td>
+                <td>{{sp.browserInfo.language}}</td>
+                <td>{{sp.createdTs}}</td>
+            </tr>
+        </table>
+
+        <div style="order: 2;" ng-show="sendingres">
+            <h3>Sending status:</h3>
+
+            <div style="display: flex; flex-wrap: wrap;">
+                <div style="width: 32%; margin-bottom: 2%; padding: 10px; border-bottom: 1px solid black;">Code</div>
+                <div style="width: 32%; margin-bottom: 2%; padding: 10px; border-bottom: 1px solid black;">Description</div>
+                <div style="width: 32%; margin-bottom: 2%; padding: 10px; border-bottom: 1px solid black;">Count</div>
+
+                <div ng-repeat="status in sendingres.statuses" style="width: 100%; display: flex; flex-direction: row;">
+                    <div style="width: 32%; margin-bottom: 2%; padding: 10px;">{{status.code}}</div>
+                    <div style="width: 32%; margin-bottom: 2%; padding: 10px;">{{status.description}}</div>
+                    <div style="width: 32%; margin-bottom: 2%; padding: 10px;">{{status.count}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--<span layout="row"><hr flex/>or<hr flex/></span>-->
+
+    <div style="text-align: right; margin-right: 20%; padding-bottom: 50px;" ng-show="subscriptionRes.subscriptions.length > 0">
+        <button type="button" class="btn btn-success" ng-click="showSendNotificationDialog()">Create Notification</button>
+    </div>
+
+
+    
+
+</div>
+

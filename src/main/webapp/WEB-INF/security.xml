@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <import resource="dao-context.xml"/>
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--<bean id="httpFirewall" class="org.springframework.security.web.firewall.StrictHttpFirewall" p:allowSemicolon="true" p:allowUrlEncodedSlash="true" p:allowBackSlash="true"/>-->
+    <!--<security:http-firewall ref="httpFirewall"/>-->
+
+    <security:http use-expressions="true" entry-point-ref="forbidden401EntryPoint">
+        <security:custom-filter before="FORM_LOGIN_FILTER" ref="compositeFilter"/>
+
+        <security:intercept-url pattern="/api/auth/login" access="permitAll()"/>
+        <security:intercept-url pattern="/api/subscription/subscribe" access="permitAll()"/>
+        <security:intercept-url pattern="/api/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/*" access="permitAll()"/>
+
+        <security:anonymous username="anonymous" granted-authority="ANONYMOUS"/>
+
+        <security:session-management>
+            <security:concurrency-control max-sessions="10"/>
+        </security:session-management>
+
+        <security:logout invalidate-session="true" logout-url="/api/auth/logout" delete-cookies="true" success-handler-ref="logoutSuccessHandler"/>
+        <security:csrf disabled="true"/>
+    </security:http>
+
+
+
+    <bean id="forbiddenEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+    <bean id="forbidden401EntryPoint" class="com.pushgroup.security.auth.Http401ForbiddenEntryPoint"/>
+    <bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler"/>
+
+    <bean id="compositeFilter" class="org.springframework.web.filter.CompositeFilter">
+        <property name="filters">
+            <list>
+                <ref bean="formFilter"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="userDetailsManager" class="com.pushgroup.security.user.PushUserDetailsManager"/>
+
+    <!--user-pass auth-->
+    <bean name="formFilter" class="com.pushgroup.security.auth.FormAuthenticationProcessingFilter">
+        <property name="authenticationManager" ref="formAuthenticationManager"/>
+    </bean>
+
+    <security:authentication-manager id="formAuthenticationManager">
+        <security:authentication-provider ref="formAuthenticationProvider"/>
+    </security:authentication-manager>
+
+    <bean id="formAuthenticationProvider" class="com.pushgroup.security.auth.FormAuthenticationProvider">
+        <property name="userDetailsService" ref="userDetailsManager"/>
+        <property name="passwordEncoder" ref="encoder"/>
+    </bean>
+
+    <bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <constructor-arg name="strength" value="11"/>
+    </bean>
+    <!---->
+
+</beans>

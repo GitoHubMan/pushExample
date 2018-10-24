@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pushgroup.core.mapper.AuthMapper">
+
+    <resultMap id="user" type="com.pushgroup.security.user.PushUserDetails">
+        <constructor>
+            <idArg jdbcType="VARCHAR" javaType="string" column="login"/>
+            <arg jdbcType="VARCHAR" javaType="string" column="password"/>
+            <arg jdbcType="BOOLEAN" javaType="java.lang.Boolean" column="enabled"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="auth" type="org.springframework.security.core.authority.SimpleGrantedAuthority">
+        <constructor>
+            <idArg jdbcType="VARCHAR" javaType="string" column="name"/>
+        </constructor>
+    </resultMap>
+
+    <select id="loadUserByUsername" resultMap="user">
+        select * from security.users
+        where login = #{value}
+    </select>
+
+    <select id="loadAuthoritiesByUsername" resultMap="auth">
+        select name
+        from security.authorities a
+        join security.roles r on r.id = a.role_id
+        where login = #{value}
+    </select>
+
+</mapper>

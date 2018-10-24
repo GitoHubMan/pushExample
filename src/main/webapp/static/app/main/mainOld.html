@@ -1,0 +1,44 @@
+<div style="padding-left: 20px;">
+    <h3 style="margin: auto; text-align: center; padding-top: 10px;">{{headingTitle}}</h3>
+
+    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; max-width: 50%; margin: auto">
+        <div style="order: 1">
+            <label for="category" style="display:inline-block; border-bottom:2px solid #0074fd;">Category:</label><br>
+            <select size="7" id="category" name="category" ng-model="selectedCategories" multiple>
+                <option style="" value=""></option>
+                <option ng-repeat="category in filters.categories" value="{{category}}">{{category}}</option>
+            </select>
+        </div>
+
+        <div style="order: 2; padding-left: 50px;">
+            <label for="browser" style="display:inline-block; border-bottom:2px solid #0074fd;">Browsers:</label><br>
+            <!--<select id="browser" ng-model="selectedBrowsersNames" ng-options="key as key for (key , value) in filters.browserFilters" multiple ng-change="browserSelected()"></select>-->
+
+            <select id="browser" ng-model="selectedBrowsers" ng-options="browserFilter.name for browserFilter in filters.browserFilters" multiple>
+                <option style="" value=""></option>
+            </select>
+        </div>
+
+        <div ng-repeat="sb in selectedBrowsers" style="order: 3; padding-left: 50px;">
+            <label style="display:inline-block; border-bottom:2px solid #0074fd;">{{sb.name}} versions:</label><br>
+            <select ng-model="sb.selectedVersions" ng-options="version for version in sb.versions" multiple></select>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; max-width: 50%; margin: auto; padding-top: 20px;">
+        <div style="order: 1">
+            <label for="landingLanguage" style="display:inline-block; border-bottom:2px solid #0074fd;">Landing Language:</label><br>
+            <select size="7" id="landingLanguage" name="landingLanguage" ng-model="selectedLandingLanguages" multiple>
+                <option style="" value=""></option>
+                <option ng-repeat="landingLanguage in filters.landingLanguages" value="{{landingLanguage}}">{{landingLanguage}}</option>
+            </select>
+        </div>
+    </div>
+
+
+
+    <div style="margin: auto; text-align: center; padding-top: 50px;">
+        <button type="button" class="btn btn-success" ng-click="getSubscriptions()">Success</button>
+    </div>
+</div>
+

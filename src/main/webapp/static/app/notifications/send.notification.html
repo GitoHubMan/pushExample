@@ -1,0 +1,135 @@
+<form novalidate ng-submit="submit(notification)">
+    <md-dialog aria-label="Create Notification" style="width: 700px;">
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create Notification</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="close" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-toolbar ng-show="serverError" class="md-warn">
+            <div class="md-toolbar-tools">
+                Server error {{serverError}}
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div layout="row" class="md-padding">
+                <div flex="50">
+                    <md-input-container style="width: 100%;">
+                        <label>Offer url</label>
+                        <input ng-model="notification.offerUrl" required>
+                    </md-input-container>
+                </div>
+                <div flex="50">
+                    <md-input-container style="width: 100%;">
+                        <label>Offer name</label>
+                        <input ng-model="notification.offerName" required>
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: -8%">
+                <div flex="100">
+                    <md-input-container style="width: 100%;">
+                        <label>Account name</label>
+                        <input ng-model="notification.accountName" required>
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: -8%">
+                <div flex="100">
+                    <md-input-container style="width: 100%;" class="md-block">
+                        <label>Title</label>
+                        <input ng-model="notification.title" md-maxlength="35" md-no-asterisk>
+
+                        <div ng-messages="notification.title.$error">
+                            <div ng-message="md-maxlength">The Title must be less than 35 characters long.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: 0">
+                
+                <div flex="100">
+                    <md-input-container style="width: 100%;">
+                        <label>Body <br/> 35(os_desktop)/60(win_desktop)/210(mobile) characters without image <br/> 35(os_desktop)/15-60(win_desktop)/35(mobile) characters with image</label>
+                        <textarea ng-model="notification.body" rows="3" max-rows="4" required md-maxlength="210"></textarea>
+
+                        <div ng-messages="notification.body.$error">
+                            <div ng-message="required">This is required.</div>
+                            <div ng-message="md-maxlength">The Body must be less than 80(desktop) or 120(mobile) characters long.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: -8%">
+                <div flex="100">
+                    <md-input-container style="width: 100%;">
+                        <label>Image url</label>
+                        <input ng-model="notification.imageUrl">
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: -8%">
+                <div flex="100">
+                    <md-input-container style="width: 100%;">
+                        <label>Icon url <br/> (jpg/png) - (192 x 192 px)</label>
+                        <input ng-model="notification.iconUrl">
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: -8%">
+                <div flex="100">
+                    <md-input-container style="width: 100%;">
+                        <label>Badge url <br/> (jpg/png ) - (360 x 240 px; 492х328; 720 x 480 px (for Retina displays))</label>
+                        <input ng-model="notification.badgeUrl">
+                    </md-input-container>
+                </div>
+                <!--<div flex="50">-->
+                    <!--<md-input-container style="width: 100%;">-->
+                        <!--<label>Sound url</label>-->
+                        <!--<input ng-model="notification.soundUrl">-->
+                    <!--</md-input-container>-->
+                <!--</div>-->
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: -8%">
+                <div flex="100">
+                    <md-input-container style="width: 100%;">
+                        <label>
+                            Actions as JSON. Format:
+                            [{"action":"x", "title":"x", "icon":"x", "url":"http://"}, {"action":"x2", "title":"x2", "icon":"x2", "url":"x2"}] <br/>
+                            (icon size ~ 24px x 24px or 128px x 128px)
+                        </label>
+                        <textarea ng-model="notification.actions" rows="3" max-rows="4"></textarea>
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" class="md-padding" style="margin-top: -8%">
+                <div flex="100">
+                    <md-input-container style="width: 100%;">
+                        <label>Data</label>
+                        <textarea ng-model="notification.data" rows="3" max-rows="4"></textarea>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <!--<button ng-click="submit(notification)" class="btn btn-info">-->
+            <!--Send to test Subs-->
+            <!--</button>-->
+            <!--<span flex></span>-->
+            <button type="submit" class="btn btn-success" ng-disabled="!notification.offerUrl || !notification.offerName || !notification.accountName || !notification.body">
+                Send
+            </button>
+            <!--<button type="submit" class="btn btn-success">-->
+                <!--Send-->
+            <!--</button>-->
+        </md-dialog-actions>
+
+    </md-dialog>
+</form>

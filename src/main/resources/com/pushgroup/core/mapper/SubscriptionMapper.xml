@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pushgroup.core.mapper.SubscriptionMapper">
+
+    <resultMap id="subscription" type="com.pushgroup.core.domain.Subscription">
+        <id property="id" column="id"></id>
+        <result property="endpoint" column="endpoint"></result>
+        <result property="expirationTime" column="expiration_time"></result>
+        <result property="p256dh" column="p256dh"></result>
+        <result property="auth" column="auth"></result>
+        <result property="sourceUrl" column="source_url"></result>
+        <result property="landingLanguage" column="landing_language"></result>
+        <result property="createdTs" column="created_ts"></result>
+        <result property="browserName" column="brw_name"></result>
+        <result property="browserMajorVersion" column="brw_major_version"></result>
+        <result property="browserFullVersion" column="brw_full_version"></result>
+        <result property="browserLanguage" column="brw_language"></result>
+        <result property="ip" column="ip"></result>
+        <result property="countryCode" column="country_code"></result>
+        <result property="countryName" column="country_name"></result>
+        <result property="cityName" column="city_name"></result>
+        <result property="regionName" column="region_name"></result>
+        <result property="osName" column="os_name"></result>
+        <result property="osVersion" column="os_version"></result>
+    </resultMap>
+
+    <resultMap id="category" type="com.pushgroup.core.domain.Category">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="description" column="description"></result>
+    </resultMap>
+
+    <resultMap id="browser" type="com.pushgroup.core.domain.Browser">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="majorVersion" column="major_version"></result>
+        <result property="fullVersion" column="full_version"></result>
+        <result property="language" column="language"></result>
+    </resultMap>
+
+    <resultMap id="ipLocation" type="com.pushgroup.core.domain.IpLocation">
+        <id property="id" column="id"></id>
+        <result property="ipFrom" column="ip_from"></result>
+        <result property="ipTo" column="ip_to"></result>
+        <result property="countryCode" column="country_code"></result>
+        <result property="countryName" column="country_name"></result>
+        <result property="regionName" column="region_name"></result>
+        <result property="cityName" column="city_name"></result>
+    </resultMap>
+
+    
+
+    <insert id="insertSubscription" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into core.subscription
+        (endpoint, expiration_time, p256dh, auth, source_url, landing_language,
+         brw_name, brw_major_version, brw_full_version, brw_language, ip2location_id,
+         ip, country_code, country_name, city_name, region_name,
+         os_name, os_version)
+        values
+        (#{endpoint}, #{expirationTime}, #{p256dh}, #{auth}, #{sourceUrl}, #{landingLanguage},
+         #{browserName}, #{browserMajorVersion}, #{browserFullVersion}, #{browserLanguage}, #{ip2locationId},
+         #{ip}, #{countryCode}, #{countryName}, #{cityName}, #{regionName},
+         #{osName}, #{osVersion})
+    </insert>
+
+    <delete id="deleteSubscription">
+        delete from core.subscription
+        where id = #{subId}
+    </delete>
+
+    <insert id="insertSubCatRef">
+        insert into core.subscription_category_ref
+        (subscription_id, category_id)
+        values
+        (#{subId}, #{catId})
+    </insert>
+
+    <delete id="deleteSubCatRef">
+        delete from core.subscription_category_ref
+        where subscription_id = #{subId}
+    </delete>
+
+    <insert id="insertCategory" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into core.category
+        (name, description)
+        values
+        (#{name}, #{description})
+    </insert>
+
+    <insert id="insertPayload" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into core.payload
+        (title, body, icon, image, badge, vibrate,
+         sound, dir, tag, data, require_interaction,
+         renotify, silent, actions, timestamp, offer_url,
+         offer_id, account_name, sub_total, created_by)
+        values
+        (#{title}, #{body}, #{iconUrl}, #{imageUrl}, #{badgeUrl}, #{vibrateAsJson},
+         #{soundUrl}, #{dir}, #{tag}, #{data}, #{requireInteraction},
+         #{renotify}, #{silent}, #{actionsAsJson}, #{timestamp}, #{offerUrl},
+         #{offerName}, #{accountName}, #{subTotal}, #{createdBy})
+    </insert>
+
+    <!--<insert id="insertBrowser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">-->
+        <!--insert into core.browser-->
+        <!--(name, major_version, full_version, language)-->
+        <!--values-->
+        <!--(#{name}, #{majorVersion}, #{fullVersion}, #{language})-->
+    <!--</insert>-->
+
+    <select id="getAllSubscriptions" resultMap="subscription">
+        select * from core.subscription
+    </select>
+
+    <select id="getSubscriptionsByCondition" resultMap="subscription">
+        select distinct(sub.*)
+        from core.subscription sub
+        left join core.subscription_category_ref scr on scr.subscription_id = sub.id
+        left join core.category cat on cat.id = scr.category_id
+        <if test="condition != null and condition != '' ">
+            <where>
+                ${condition}
+            </where>
+        </if>
+        order by id desc
+    </select>
+
+    <select id="getSubscriptionsByConditionAndLimitAndOffset" resultMap="subscription">
+        select distinct(sub.*)
+        from core.subscription sub
+        left join core.subscription_category_ref scr on scr.subscription_id = sub.id
+        left join core.category cat on cat.id = scr.category_id
+        <if test="condition != null and condition != '' ">
+            <where>
+                ${condition}
+            </where>
+        </if>
+        order by id desc
+        OFFSET #{offset} LIMIT #{limit}
+    </select>
+
+    <select id="getCountByCondition" resultType="Long">
+        select count(distinct(sub.*))
+        from core.subscription sub
+        left join core.subscription_category_ref scr on scr.subscription_id = sub.id
+        left join core.category cat on cat.id = scr.category_id
+        <if test="condition != null and condition != '' ">
+            <where>
+                ${condition}
+            </where>
+        </if>
+    </select>
+
+    <select id="getBrowsersByNameAndMajorVersion" resultMap="browser">
+        select * from core.browser
+        where name = #{name} and major_version = #{majorVersion}
+    </select>
+
+    <select id="getAllCategories" resultMap="category">
+        select * from core.category
+    </select>
+
+    <select id="getCategoryByName" resultMap="category">
+        select * from core.category
+        where lower(name) = lower(#{name})
+    </select>
+
+    <select id="getAllLandingLanguages" resultType="string">
+        select distinct landing_language
+        from core.subscription
+        where landing_language is not null
+    </select>
+
+    <select id="getAllBrowsersNames" resultType="string">
+        select distinct(brw_name)
+        from core.subscription
+    </select>
+
+    <select id="getAllMajorVersionsByBrowserName" resultType="string">
+        select distinct(brw_major_version)
+        from core.subscription
+        where lower(brw_name) = lower(#{name})
+    </select>
+
+    <select id="getAllBrowserLanguages" resultType="string">
+        select distinct(brw_language)
+        from core.subscription
+        where brw_language is not null
+    </select>
+
+    <select id="getAllOsNames" resultType="string">
+        select distinct(os_name)
+        from core.subscription
+        where os_name is not null
+    </select>
+
+    <select id="getAllVersionsByOsName" resultType="string">
+        select distinct(os_version)
+        from core.subscription
+        where lower(os_name) = lower(#{name})
+    </select>
+
+    <select id="getIpLocationByIp" resultMap="ipLocation">
+        SELECT *
+        FROM core.ip2location_db3
+        WHERE ip_from = (SELECT MAX(ip_from)
+                         FROM core.ip2location_db3
+                         WHERE ip_from &lt;= (#{ip}::inet - '0.0.0.0'::inet)
+                        )
+    </select>
+
+    <select id="getAllCountyCodes" resultType="string">
+        select distinct(country_code)
+        from core.subscription
+        where country_code is not null
+    </select>
+    <select id="getAllCountryNames" resultType="string">
+        select distinct(country_name)
+        from core.subscription
+        where country_name is not null
+    </select>
+    <select id="getAllCityNames" resultType="string">
+        select distinct(city_name)
+        from core.subscription
+        where city_name is not null
+    </select>
+
+</mapper>

@@ -1,0 +1,222 @@
+.md-open-menu-container {
+  z-index: 89;
+}
+md-backdrop.md-menu-backdrop {
+  z-index: 88;
+}
+
+.md-dialog-container {
+  z-index: 90;
+  md-dialog {
+    margin-top: 75px;
+    border-radius: 0;
+    font-family:'RobotoLight';
+    &.top-right {
+      align-self: flex-start;
+      margin-left: auto;
+    }
+    md-content {
+      background-color: #fff;
+    }
+  }
+  .top-right {
+    .wrapper-dialog {
+      max-width: 358px;
+      height: auto;
+      background-color: white;
+      padding: 35px;
+      .top-section {
+        white-space: nowrap;
+        width: 100%;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        a {
+          color: $dark-blue;
+          text-decoration: none;
+        }
+      }
+      .form-title {
+        font-size: 30px;
+        font-weight: bold;
+        white-space: normal;
+      }
+      md-input-container {
+        width: 100%;
+        font-family: "RobotoMedium";
+        &:not(:last-of-type) {
+          margin-bottom: 0;
+        }
+        label {
+          font-size: 15px;
+          color: #000;
+        }
+        input, textarea {
+          border-bottom: none;
+          font-size: 15px;
+          margin-top: 5px;
+          padding: 10px 15px;
+          background-color: $light-blue;
+        }
+        textarea {
+          min-height: 115px;
+        }
+        input {
+          height: 36px;
+        }
+        .md-errors-spacer {
+          position: absolute;
+          right: 0;
+          top: 100%;
+        }
+      }
+
+      .button-wrapper {
+        text-align: center;
+      }
+
+      .choose-team {
+        margin-bottom: 20px;
+        font-size: 15px;
+        font-family: "RobotoMedium";
+        &:before {
+          display: inline-block;
+          content: url("img/person.svg");
+          vertical-align: middle;
+          margin-right: 5px;
+        }
+        span {
+          color: $dark-blue;
+        }
+        a {
+          color: $dark-blue;
+          text-decoration: underline;
+        }
+      }
+      .text {
+        margin-bottom: 20px;
+        span {
+          color: $gray;
+        }
+      }
+    }
+  }
+}
+
+.create-tool,
+.create-member,
+.change-password,
+.add-org-appprofile,
+.create-codebase{
+  max-width: 358px;
+  height: auto;
+  background-color: white;
+  padding: 35px;
+  .top-section {
+    white-space: nowrap;
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    a {
+      color: $dark-blue;
+      text-decoration: none;
+    }
+  }
+
+  .info-top-section {
+    &.with-active {
+      align-items: center;
+      .login {
+        margin-bottom: 0;
+      }
+      md-switch {
+        margin: 0;
+      }
+    }
+  }
+
+  .form-title {
+    font-size: 30px;
+    font-weight: bold;
+    white-space: normal;
+  }
+
+  .button-wrapper {
+    text-align: center;
+  }
+  md-input-container {
+    width: 100%;
+  }
+
+  md-content {
+    overflow-x: hidden;
+  }
+}
+
+.add-org-appprofile {
+  .filter-section {
+    display: flex;
+    width: 100%;
+    md-input-container {
+      margin-right: 20px;
+      width: 50%;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .table-wrapper,
+  .table,
+  thead,
+  tbody,
+  tr {
+    width: 100%;
+  }
+
+  .table-wrapper {
+    height: 300px;
+    overflow: auto;
+    margin-bottom: 20px;
+    border: 1px solid #e1e7f6;
+  }
+  .table {
+    border-spacing: 0;
+    thead {
+      font-weight: bold;
+      background-color: #e1e7f6;
+      th {
+        padding: 10px 5px;
+      }
+    }
+    tbody {
+      > tr {
+        outline: none;
+        transition: background-color .1s;
+        cursor: pointer;
+        &:nth-child(even) {
+          background-color: rgba(#e1e7f6,0.2);
+        }
+        &:hover {
+          background-color: rgba(#e1e7f6,0.8);
+        }
+        &.selected {
+          background-color: rgba(#e1e7f6,1);
+        }
+        td {
+          border-top: 1px solid #ddd;
+          padding: 10px 5px;
+        }
+      }
+    }
+  }
+}
+
+.create-tool {
+  .top-section {
+    margin-bottom: 0;
+  }
+}
